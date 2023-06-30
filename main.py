@@ -63,33 +63,61 @@ def calculate_all_costs(category_costs):
     return total_costs
 
 
+def calculate_new_sale_price(category_prices):
+    """Função para calcular o novo valor de venda total do projeto"""
+    total_price = 0
+    for cost in category_prices.values():
+        total_price += cost
+    return total_price
+
+
+def calculate_new_sale_price_by_category(categories, category_costs):
+    """Função para calcular o preço de venda de acordo com os mark-ups"""
+    category_sale_price = {
+        category[0]: category_costs[category[0]] * category[1]
+        for category in categories
+    }
+
+    return category_sale_price
+
+#PROJECT_ID = input("Insira o ID do ambiente: ")
 PROJECT_ID = "0025124307"
+
+mkp_mdf = float(input("Insira o Mark-Up para MDF: "))
+mkp_basic = float(input("Insira o Mark-Up para Ferragens Básicas: "))
+mkp_rafix = float(input("Insira o Mark-Up para Rafix: "))
+mkp_outsourced = float(input("Insira o Mark-Up para Terceirizados: "))
 
 woodwork_data, holes_data = read_file(PROJECT_ID)
 
 sales_price = calculate_sales_price(woodwork_data, holes_data)
 print(f"O valor de venda do Dinabox é R$ {sales_price:.2f}")
 
-CATEGORIES = [("Acessórios", 2),
-              ("Ferragens Básicas", 2),
-              ("Ferragens Especiais", 2),
-              ("Perfis e Puxadores", 2),
-              ("Porta de Alumínio", 2),
-              ("Terceirizados", 2),
-              ("Iluminação", 2),
-              ("Vidraçaria", 2),
-              ("Trilhos", 2),
-              ("MDFs", 2),
-              ("Fitas", 2),
-              ("Fita 22mm", 2),
-              ("Rafix", 2),
-              ("Outros", 2),
+CATEGORIES = [("Acessórios", mkp_basic),
+              ("Ferragens Básicas", mkp_basic),
+              ("Ferragens Especiais", mkp_basic),
+              ("Perfis e Puxadores", mkp_basic),
+              ("Porta de Alumínio", mkp_outsourced),
+              ("Terceirizados", mkp_outsourced),
+              ("Iluminação", mkp_outsourced),
+              ("Vidraçaria", mkp_outsourced),
+              ("Trilhos", mkp_basic),
+              ("MDFs", mkp_mdf),
+              ("Fitas", mkp_mdf),
+              ("Fita 22mm", mkp_mdf),
+              ("Rafix", mkp_rafix),
+              ("Outros", 0),
               ]
 
 category_cost = calculate_category_costs(CATEGORIES, woodwork_data, holes_data)
-print("Os custos de cada categoria são:")
-for category in category_cost:
-    print(f"    {category}: R$ {category_cost[category]:.2f}")
 
 all_costs = calculate_all_costs(category_cost)
 print(f"O custo total do projeto é R$ {all_costs:.2f}")
+
+new_sale_price_by_category = calculate_new_sale_price_by_category(CATEGORIES, category_cost)
+print("O valor de venda de cada categoria é:")
+for category in new_sale_price_by_category:
+    print(f"    {category}: R$ {new_sale_price_by_category[category]:.2f}")
+
+new_price = calculate_new_sale_price(new_sale_price_by_category)
+print(f"O valor final do projeto é R$ {new_price:.2f}")
