@@ -44,7 +44,8 @@ def calculate_category_costs(categories, woodwork, holes):
             category_costs["Fitas"] += part["edge_top_factory"]
         for component in inputs:
             if component["category_name"] in category_costs.keys():
-                category_costs[component["category_name"]] += component["factory_price"]
+                category_costs[component["category_name"]] += (
+                    component["factory_price"])
             else:
                 not_found = component["category_name"]
                 print(f"Categoria não encontrada: {not_found}")
@@ -80,7 +81,8 @@ def calculate_new_sale_price_by_category(categories, category_costs):
 
     return category_sale_price
 
-#PROJECT_ID = input("Insira o ID do ambiente: ")
+
+# PROJECT_ID = input("Insira o ID do ambiente: ")
 PROJECT_ID = "0025124307"
 
 mkp_mdf = float(input("Insira o Mark-Up para MDF: "))
@@ -114,7 +116,8 @@ category_cost = calculate_category_costs(CATEGORIES, woodwork_data, holes_data)
 all_costs = calculate_all_costs(category_cost)
 print(f"O custo total do projeto é R$ {all_costs:.2f}")
 
-new_sale_price_by_category = calculate_new_sale_price_by_category(CATEGORIES, category_cost)
+new_sale_price_by_category = calculate_new_sale_price_by_category(
+    CATEGORIES, category_cost)
 print("O valor de venda de cada categoria é:")
 for category in new_sale_price_by_category:
     print(f"    {category}: R$ {new_sale_price_by_category[category]:.2f}")
