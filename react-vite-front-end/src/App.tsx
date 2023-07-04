@@ -1,12 +1,13 @@
 import Forms from './components/Forms';
 import Header from './components/Header';
+import ProjectProvider from './context/ProjectProvider';
 
 function App() {
   return (
-    <div>
+    <ProjectProvider>
       <Header />
       <Forms />
-    </div>
+    </ProjectProvider>
   );
 }
 

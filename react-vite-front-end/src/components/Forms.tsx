@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 function Forms() {
-  const [ambient, setAmbient] = useState(1);
   const [markUps, setMarkUps] = useState({
     mkpMdfBranco: 0,
     mkpMdfMadeirado: 0,
