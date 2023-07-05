@@ -113,7 +113,7 @@ print(f"O valor de venda do Dinabox é R$ {sales_price:.2f}")
 CATEGORIES = [("Acessórios", mkp_basic),
               ("Ferragens Básicas", mkp_basic),
               ("Ferragens Especiais", mkp_special),
-              ("Ferragens BLUM e afins", mkp_special),
+              ("Ferragens BLUM e afins", mkp_outsourced),
               ("Perfis e Puxadores", mkp_basic),
               ("Porta de Alumínio", mkp_outsourced),
               ("Terceirizados", mkp_outsourced),
