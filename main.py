@@ -8,10 +8,11 @@ def read_file(id_file):
         data = json.load(file)
         woodwork_data1 = data["woodwork"]
         holes_data1 = data["holes"]
-    return woodwork_data1, holes_data1
+        components_data1 = data["components"]["data"]
+    return woodwork_data1, holes_data1, components_data1
 
 
-def calculate_sales_price(woodwork, holes):
+def calculate_sales_price(woodwork, holes, components):
     """Função para calcular o valor de venda total do projeto"""
 
     sale_price = 0
@@ -27,10 +28,14 @@ def calculate_sales_price(woodwork, holes):
     for hole in holes:
         sale_price += hole["sale_price"]
 
+    for key, value in components.items():
+        for component in value["category_data"]:
+            sale_price += component["parent"][0]["sale_price"]
+
     return sale_price
 
 
-def calculate_category_costs(categories, woodwork, holes):
+def calculate_category_costs(categories, woodwork, holes, components):
     """Função para calcular os custos de cada categoria"""
     category_costs = {category[0]: 0 for category in categories}
     for modules in woodwork:
@@ -52,6 +57,15 @@ def calculate_category_costs(categories, woodwork, holes):
 
     for hole in holes:
         category_costs["Rafix"] += hole["factory_price"]
+
+    for key, value in components.items():
+        for component in value["category_data"]:
+            component_category = component["parent"][0]["category_name"]
+            component_cost = component["parent"][0]["factory_price"]
+            if component_category in category_costs.keys():
+                category_costs[component_category] += component_cost
+            else:
+                print(f"Categoria não encontrada: {component_category}")
 
     return category_costs
 
@@ -83,21 +97,23 @@ def calculate_new_sale_price_by_category(categories, category_costs):
 
 
 # PROJECT_ID = input("Insira o ID do ambiente: ")
-PROJECT_ID = "0025124307"
+PROJECT_ID = "0170346714"
 
 mkp_mdf = float(input("Insira o Mark-Up para MDF: "))
 mkp_basic = float(input("Insira o Mark-Up para Ferragens Básicas: "))
+mkp_special = float(input("Insira o Mark-up para Ferragens Especiais:"))
 mkp_rafix = float(input("Insira o Mark-Up para Rafix: "))
 mkp_outsourced = float(input("Insira o Mark-Up para Terceirizados: "))
 
-woodwork_data, holes_data = read_file(PROJECT_ID)
+woodwork_data, holes_data, components_data = read_file(PROJECT_ID)
 
-sales_price = calculate_sales_price(woodwork_data, holes_data)
+sales_price = calculate_sales_price(woodwork_data, holes_data, components_data)
 print(f"O valor de venda do Dinabox é R$ {sales_price:.2f}")
 
 CATEGORIES = [("Acessórios", mkp_basic),
               ("Ferragens Básicas", mkp_basic),
-              ("Ferragens Especiais", mkp_basic),
+              ("Ferragens Especiais", mkp_special),
+              ("Ferragens BLUM e afins", mkp_outsourced),
               ("Perfis e Puxadores", mkp_basic),
               ("Porta de Alumínio", mkp_outsourced),
               ("Terceirizados", mkp_outsourced),
@@ -107,11 +123,12 @@ CATEGORIES = [("Acessórios", mkp_basic),
               ("MDFs", mkp_mdf),
               ("Fitas", mkp_mdf),
               ("Fita 22mm", mkp_mdf),
+              ("Fita 60mm", mkp_mdf),
               ("Rafix", mkp_rafix),
               ("Outros", 0),
               ]
 
-category_cost = calculate_category_costs(CATEGORIES, woodwork_data, holes_data)
+category_cost = calculate_category_costs(CATEGORIES, woodwork_data, holes_data, components_data)
 
 all_costs = calculate_all_costs(category_cost)
 print(f"O custo total do projeto é R$ {all_costs:.2f}")
