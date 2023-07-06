@@ -97,7 +97,7 @@ def calculate_new_sale_price_by_category(categories, category_costs):
 
 
 # PROJECT_ID = input("Insira o ID do ambiente: ")
-PROJECT_ID = "0881281641"
+PROJECT_ID = "0170346714"
 
 mkp_mdf = float(input("Insira o Mark-Up para MDF: "))
 mkp_basic = float(input("Insira o Mark-Up para Ferragens Básicas: "))
